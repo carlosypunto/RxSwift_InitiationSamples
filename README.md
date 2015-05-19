@@ -25,6 +25,7 @@ RxSwift we have two main types Observables (Sequences) y Disposables (Observers)
 * `map` an `Array`
 * `filter` an `Array`
 * `reduce` an `Array`
+* `zip` two Arrays
 * function composition
 * The `>-` operator
 * The `Box` class

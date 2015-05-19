@@ -78,8 +78,6 @@ class ViewController: UIViewController {
         // Moreover, DisposeBag has a `dispose()` method, which dispose all observable added to it
         
         
-        
-        // FIXME: This sequence only work on the first tap
         signInButton.rx_tap()
             >- doOnNext {
                 self.signInButton.enabled = false
@@ -127,20 +125,23 @@ class ViewController: UIViewController {
             let task = {
                 DummyAsynchronousService().singInWithUserName(username, password: password) { success in
                     if success {
-                        observer.on(Event.Next(Box(true)))
+                        observer.on(.Next(Box(true)))
                     }
                     else {
-                        observer.on(Event.Next(Box(false)))
+                        observer.on(.Next(Box(false)))
                     }
+                    observer.on(.Completed)
                 }
             }
             task()
             return AnonymousDisposable {
-                // TODO: really need a dispose function?
+                
             }
         }
         
     }
+    
+    
     
 }
 
