@@ -28,6 +28,7 @@ RxSwift we have two main types Observables (Sequences) y Disposables (Observers)
 * function composition
 * The `>-` operator
 * The `Box` class
+* The `Result` enum
 
 ### 01_RxSwiftSample Project
 
@@ -44,6 +45,7 @@ RxSwift we have two main types Observables (Sequences) y Disposables (Observers)
 * `map` an `Observable`
 * `combineLatest` events
 * `DisposeBag` 
+* Create a custom Observable
 
 
 ### to be continue!!!

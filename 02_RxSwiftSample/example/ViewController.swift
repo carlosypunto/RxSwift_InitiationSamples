@@ -16,11 +16,19 @@ class ViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var signInButton: UIButton!
     @IBOutlet weak var signInFailureText: UILabel!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     var disposeBag = DisposeBag()
+    var backgroundWorkScheduler: ImmediateScheduler!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let operationQueue = NSOperationQueue()
+        operationQueue.maxConcurrentOperationCount = 2
+        operationQueue.qualityOfService = NSQualityOfService.UserInitiated
+        backgroundWorkScheduler = OperationQueueScheduler(operationQueue: operationQueue)
+        
         
         /* map function transform a sequence of a type in another sequence of diferent type */
         let validUsernameSignal /* : Observable<Bool> */ = usernameTextField.rx_text()
@@ -70,6 +78,35 @@ class ViewController: UIViewController {
         // Moreover, DisposeBag has a `dispose()` method, which dispose all observable added to it
         
         
+        
+        // FIXME: This sequence only work on the first tap
+        signInButton.rx_tap()
+            >- doOnNext {
+                self.signInButton.enabled = false
+                self.signInFailureText.hidden = true
+                self.activityIndicator.startAnimating()
+            }
+//            >- observeSingleOn(self.backgroundWorkScheduler)
+            >- map {
+                self.checkLogin(username: self.usernameTextField.text, password: self.passwordTextField.text)
+            }
+            >- concat
+//            >- observeSingleOn(MainScheduler.sharedInstance) // TODO: This don't work
+//            >- variable
+            >- subscribeNext { valid in
+                self.activityIndicator.stopAnimating()
+                self.signInFailureText.hidden = valid
+                self.signInButton.enabled = true
+                if valid {
+                    self.performSegueWithIdentifier("goToOtherVC", sender: self)
+                    self.usernameTextField.text = ""
+                    self.passwordTextField.text = ""
+                    self.usernameTextField.backgroundColor = UIColor.yellowColor()
+                    self.passwordTextField.backgroundColor = UIColor.yellowColor()
+                    self.signInButton.enabled = false
+                }
+            }
+            >- disposeBag.addDisposable
     }
     
     // MARK: - Validate string functions
@@ -80,6 +117,45 @@ class ViewController: UIViewController {
     
     func isValidPassword(password: String) -> Bool {
         return count(password) > 3
+    }
+    
+    // MARK: - Create a custom Observable
+    
+    func checkLogin(#username: String, password: String) -> Observable<Bool> {
+        
+        return create { observer in
+            let task = {
+                DummyAsynchronousService().singInWithUserName(username, password: password) { success in
+                    if success {
+                        observer.on(Event.Next(Box(true)))
+                    }
+                    else {
+                        observer.on(Event.Next(Box(false)))
+                    }
+                }
+            }
+            task()
+            return AnonymousDisposable {
+                // TODO: really need a dispose function?
+            }
+        }
+        
+    }
+    
+}
+
+
+typealias ValidationObservable = Observable<(valid: Bool?, message: String?)>
+
+class DummyAsynchronousService {
+    
+    func singInWithUserName(userName: String, password: String, callback: Bool -> Void) {
+        
+        delay(2.0) {
+            let success = userName == "user" && password == "password"
+            callback(success)
+        }
+        
     }
     
 }
