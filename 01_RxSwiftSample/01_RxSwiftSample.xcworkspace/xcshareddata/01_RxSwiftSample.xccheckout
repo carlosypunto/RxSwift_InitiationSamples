@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>3AB22379-A052-48EF-A92E-0EF4E815C456</string>
+	<key>IDESourceControlProjectName</key>
+	<string>01_RxSwiftSample</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>70042CCACA2C0143CE3902B5CA04208AE2EDE0C2</key>
+		<string>https://github.com/carlosypunto/RxSwift_InitiationCouse.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>01_RxSwiftSample/01_RxSwiftSample.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>70042CCACA2C0143CE3902B5CA04208AE2EDE0C2</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/carlosypunto/RxSwift_InitiationCouse.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>70042CCACA2C0143CE3902B5CA04208AE2EDE0C2</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>70042CCACA2C0143CE3902B5CA04208AE2EDE0C2</string>
+			<key>IDESourceControlWCCName</key>
+			<string>RxSwift_InitiationCouse</string>
+		</dict>
+	</array>
+</dict>
+</plist>

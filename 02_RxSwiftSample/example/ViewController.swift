@@ -84,13 +84,12 @@ class ViewController: UIViewController {
                 self.signInFailureText.hidden = true
                 self.activityIndicator.startAnimating()
             }
-//            >- observeSingleOn(self.backgroundWorkScheduler)
             >- map {
                 self.checkLogin(username: self.usernameTextField.text, password: self.passwordTextField.text)
+//                  >- observeOn(self.backgroundWorkScheduler) // TODO: it'll work in next version
             }
             >- concat
-//            >- observeSingleOn(MainScheduler.sharedInstance) // TODO: This don't work
-//            >- variable
+//            >- observeOn(MainScheduler.sharedInstance) // TODO: it'll work in next version
             >- subscribeNext { valid in
                 self.activityIndicator.stopAnimating()
                 self.signInFailureText.hidden = valid

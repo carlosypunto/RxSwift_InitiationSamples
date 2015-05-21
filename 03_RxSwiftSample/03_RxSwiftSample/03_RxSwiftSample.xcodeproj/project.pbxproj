@@ -7,8 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07E3FEF11B0C8A8900F00100 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07E3FEF01B0C8A8900F00100 /* SearchResultsViewController.swift */; };
+		07E3FEF31B0C8EA200F00100 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07E3FEF21B0C8EA200F00100 /* Accounts.framework */; };
+		07E3FEF51B0C8EA900F00100 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07E3FEF41B0C8EA900F00100 /* Social.framework */; };
+		07E3FEF71B0CD31B00F00100 /* Tweet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07E3FEF61B0CD31B00F00100 /* Tweet.swift */; };
+		07E3FEF91B0CD69400F00100 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07E3FEF81B0CD69400F00100 /* TableViewCell.swift */; };
+		07E3FEFB1B0D054200F00100 /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07E3FEFA1B0D054200F00100 /* Dependencies.swift */; };
 		07EE269F1B0A0A67004E47DC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EE269E1B0A0A67004E47DC /* AppDelegate.swift */; };
-		07EE26A11B0A0A67004E47DC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EE26A01B0A0A67004E47DC /* ViewController.swift */; };
+		07EE26A11B0A0A67004E47DC /* SearchFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EE26A01B0A0A67004E47DC /* SearchFormViewController.swift */; };
 		07EE26A41B0A0A67004E47DC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 07EE26A21B0A0A67004E47DC /* Main.storyboard */; };
 		07EE26A61B0A0A67004E47DC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07EE26A51B0A0A67004E47DC /* Images.xcassets */; };
 		07EE26A91B0A0A67004E47DC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 07EE26A71B0A0A67004E47DC /* LaunchScreen.xib */; };
@@ -16,10 +22,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		07EE26991B0A0A67004E47DC /* 02_RxSwiftSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 02_RxSwiftSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		07E3FEF01B0C8A8900F00100 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
+		07E3FEF21B0C8EA200F00100 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		07E3FEF41B0C8EA900F00100 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		07E3FEF61B0CD31B00F00100 /* Tweet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tweet.swift; sourceTree = "<group>"; };
+		07E3FEF81B0CD69400F00100 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		07E3FEFA1B0D054200F00100 /* Dependencies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
+		07EE26991B0A0A67004E47DC /* 03_RxSwiftSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 03_RxSwiftSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		07EE269D1B0A0A67004E47DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		07EE269E1B0A0A67004E47DC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		07EE26A01B0A0A67004E47DC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		07EE26A01B0A0A67004E47DC /* SearchFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFormViewController.swift; sourceTree = "<group>"; };
 		07EE26A31B0A0A67004E47DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		07EE26A51B0A0A67004E47DC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		07EE26A81B0A0A67004E47DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -33,6 +45,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07E3FEF51B0C8EA900F00100 /* Social.framework in Frameworks */,
+				07E3FEF31B0C8EA200F00100 /* Accounts.framework in Frameworks */,
 				7586BD9876D556FAB3202B2E /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -53,7 +67,7 @@
 		07EE269A1B0A0A67004E47DC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				07EE26991B0A0A67004E47DC /* 02_RxSwiftSample.app */,
+				07EE26991B0A0A67004E47DC /* 03_RxSwiftSample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,8 +75,12 @@
 		07EE269B1B0A0A67004E47DC /* example */ = {
 			isa = PBXGroup;
 			children = (
+				07E3FEFA1B0D054200F00100 /* Dependencies.swift */,
 				07EE269E1B0A0A67004E47DC /* AppDelegate.swift */,
-				07EE26A01B0A0A67004E47DC /* ViewController.swift */,
+				07EE26A01B0A0A67004E47DC /* SearchFormViewController.swift */,
+				07E3FEF01B0C8A8900F00100 /* SearchResultsViewController.swift */,
+				07E3FEF61B0CD31B00F00100 /* Tweet.swift */,
+				07E3FEF81B0CD69400F00100 /* TableViewCell.swift */,
 				07EE26A21B0A0A67004E47DC /* Main.storyboard */,
 				07EE26A51B0A0A67004E47DC /* Images.xcassets */,
 				07EE26A71B0A0A67004E47DC /* LaunchScreen.xib */,
@@ -82,6 +100,8 @@
 		5A563443021675B7BB2958A7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				07E3FEF41B0C8EA900F00100 /* Social.framework */,
+				07E3FEF21B0C8EA200F00100 /* Accounts.framework */,
 				66B2AE88D24028F592BBC26C /* Pods.framework */,
 			);
 			name = Frameworks;
@@ -99,9 +119,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		07EE26981B0A0A67004E47DC /* 02_RxSwiftSample */ = {
+		07EE26981B0A0A67004E47DC /* 03_RxSwiftSample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 07EE26B81B0A0A67004E47DC /* Build configuration list for PBXNativeTarget "02_RxSwiftSample" */;
+			buildConfigurationList = 07EE26B81B0A0A67004E47DC /* Build configuration list for PBXNativeTarget "03_RxSwiftSample" */;
 			buildPhases = (
 				37E91348D47A27FBA356F71E /* Check Pods Manifest.lock */,
 				07EE26951B0A0A67004E47DC /* Sources */,
@@ -114,9 +134,9 @@
 			);
 			dependencies = (
 			);
-			name = 02_RxSwiftSample;
+			name = 03_RxSwiftSample;
 			productName = example;
-			productReference = 07EE26991B0A0A67004E47DC /* 02_RxSwiftSample.app */;
+			productReference = 07EE26991B0A0A67004E47DC /* 03_RxSwiftSample.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -133,7 +153,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 07EE26941B0A0A67004E47DC /* Build configuration list for PBXProject "02_RxSwiftSample" */;
+			buildConfigurationList = 07EE26941B0A0A67004E47DC /* Build configuration list for PBXProject "03_RxSwiftSample" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -146,7 +166,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				07EE26981B0A0A67004E47DC /* 02_RxSwiftSample */,
+				07EE26981B0A0A67004E47DC /* 03_RxSwiftSample */,
 			);
 		};
 /* End PBXProject section */
@@ -217,8 +237,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				07EE26A11B0A0A67004E47DC /* ViewController.swift in Sources */,
+				07E3FEFB1B0D054200F00100 /* Dependencies.swift in Sources */,
+				07E3FEF91B0CD69400F00100 /* TableViewCell.swift in Sources */,
+				07EE26A11B0A0A67004E47DC /* SearchFormViewController.swift in Sources */,
+				07E3FEF11B0C8A8900F00100 /* SearchResultsViewController.swift in Sources */,
 				07EE269F1B0A0A67004E47DC /* AppDelegate.swift in Sources */,
+				07E3FEF71B0CD31B00F00100 /* Tweet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,7 +356,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = 02_RxSwiftSample;
+				PRODUCT_NAME = 03_RxSwiftSample;
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
@@ -343,14 +368,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = 02_RxSwiftSample;
+				PRODUCT_NAME = 03_RxSwiftSample;
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		07EE26941B0A0A67004E47DC /* Build configuration list for PBXProject "02_RxSwiftSample" */ = {
+		07EE26941B0A0A67004E47DC /* Build configuration list for PBXProject "03_RxSwiftSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				07EE26B61B0A0A67004E47DC /* Debug */,
@@ -359,7 +385,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		07EE26B81B0A0A67004E47DC /* Build configuration list for PBXNativeTarget "02_RxSwiftSample" */ = {
+		07EE26B81B0A0A67004E47DC /* Build configuration list for PBXNativeTarget "03_RxSwiftSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				07EE26B91B0A0A67004E47DC /* Debug */,
