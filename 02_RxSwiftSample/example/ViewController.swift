@@ -124,10 +124,10 @@ class ViewController: UIViewController {
             let task = {
                 DummyAsynchronousService().singInWithUserName(username, password: password) { success in
                     if success {
-                        observer.on(.Next(Box(true)))
+                        observer.on(.Next(RxBox(true)))
                     }
                     else {
-                        observer.on(.Next(Box(false)))
+                        observer.on(.Next(RxBox(false)))
                     }
                     observer.on(.Completed)
                 }

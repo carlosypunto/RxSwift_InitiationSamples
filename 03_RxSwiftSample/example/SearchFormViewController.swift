@@ -117,7 +117,7 @@ class SearchFormViewController: UIViewController {
             let task = { [unowned self] () -> Void in
                 self.accountStore.requestAccessToAccountsWithType(self.twitterAccountType, options: nil) { success, error in
                     if success {
-                        observer.on(.Next(Box(Void())))
+                        observer.on(.Next(RxBox(Void())))
                     }
                     else {
                         observer.on(.Error(error))
@@ -157,7 +157,7 @@ class SearchFormViewController: UIViewController {
                     request.performRequestWithHandler { data, urlResponse, error in
                         if urlResponse.statusCode == 200 {
                             let timelineData = NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments, error: nil) as? [String: AnyObject]
-                            observer.on(.Next(Box(timelineData)))
+                            observer.on(.Next(RxBox(timelineData)))
                         }
                         else {
                             observer.on(.Error(invalidResponseError))
