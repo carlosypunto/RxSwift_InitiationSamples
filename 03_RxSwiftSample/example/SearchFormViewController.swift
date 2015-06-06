@@ -65,7 +65,7 @@ class SearchFormViewController: UIViewController {
             >- disposeBag.addDisposable
         
         
-        // workaround while `then` operator isn't ready
+        // workaround to RAC `then` operator
         requestAccess
             >- subscribeCompleted {
                 
@@ -79,7 +79,7 @@ class SearchFormViewController: UIViewController {
                     }
                     >- observeOn(self.$.backgroundWorkScheduler)
                     >- concat
-                    >- observeOn(self.$.mainScheduler) // TODO: it'll work in next version
+                    >- observeOn(self.$.mainScheduler)
                 
                 twitterDictionaryObservable
                     >- subscribeNext { [unowned self] dictionary in
