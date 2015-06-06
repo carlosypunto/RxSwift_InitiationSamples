@@ -31,13 +31,13 @@ class ViewController: UIViewController {
         
         
         /* map function transform a sequence of a type in another sequence of diferent type */
-        let validUsernameSignal /* : Observable<Bool> */ = usernameTextField.rx_text()
+        let validUsernameSignal /* : Observable<Bool> */ = usernameTextField.rx_text
             // map Observable<String> to an Observable<Bool>
             >- map { text in
                 self.isValidUsername(text)
         }
         
-        let validPasswordSignal /* : Observable<Bool> */ = passwordTextField.rx_text()
+        let validPasswordSignal /* : Observable<Bool> */ = passwordTextField.rx_text
             // map Observable<String> to an Observable<Bool>
             >- map { text in
                 self.isValidPassword(text)
@@ -78,7 +78,7 @@ class ViewController: UIViewController {
         // Moreover, DisposeBag has a `dispose()` method, which dispose all observable added to it
         
         
-        signInButton.rx_tap()
+        signInButton.rx_tap
             >- doOnNext {
                 self.signInButton.enabled = false
                 self.signInFailureText.hidden = true
@@ -86,10 +86,10 @@ class ViewController: UIViewController {
             }
             >- map {
                 self.checkLogin(username: self.usernameTextField.text, password: self.passwordTextField.text)
-//                  >- observeOn(self.backgroundWorkScheduler) // TODO: it'll work in next version
             }
+            >- observeOn(self.backgroundWorkScheduler) 
             >- concat
-//            >- observeOn(MainScheduler.sharedInstance) // TODO: it'll work in next version
+            >- observeOn(MainScheduler.sharedInstance) 
             >- subscribeNext { valid in
                 self.activityIndicator.stopAnimating()
                 self.signInFailureText.hidden = valid

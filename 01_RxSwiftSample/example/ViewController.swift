@@ -31,7 +31,7 @@ class ViewController: UIViewController {
         
         // textField1Observable is an Observable of type String
         // textField1Observable fire an Event.Next every time you add a character into textField1
-        let textField1Observable /*: Observable<String> */ = textField1.rx_text()
+        let textField1Observable /*: Observable<String> */ = textField1.rx_text
         
         // subscribeNext returns a disposable (only for Events of .Next type) subscribed to the Observable
         let textField1Disposable /*: Disposable */ = textField1Observable

@@ -41,7 +41,7 @@ class SearchFormViewController: UIViewController {
         
         weak var weakSelf = self
         
-        self.searchText.rx_text()
+        self.searchText.rx_text
             >- map { text in
                 self.isValidSearchText(text) ? UIColor.whiteColor() : UIColor.yellowColor()
             }
@@ -69,17 +69,17 @@ class SearchFormViewController: UIViewController {
         requestAccess
             >- subscribeCompleted {
                 
-                let twitterDictionaryObservable /* : Observable<[String: AnyObject]?> */  = self.searchText.rx_text()
+                let twitterDictionaryObservable /* : Observable<[String: AnyObject]?> */  = self.searchText.rx_text
                     >- filter { text in
                         self.isValidSearchText(text)
                     }
                     >- throttle(500, self.$.mainScheduler)
                     >- map { text in
                         self.observableForSearchWithText(text)
-//                          >- observeOn(self.$.backgroundWorkScheduler) // TODO: it'll work in next version
                     }
+                    >- observeOn(self.$.backgroundWorkScheduler)
                     >- concat
-//                    >- observeOn(self.$.mainScheduler) // TODO: it'll work in next version
+                    >- observeOn(self.$.mainScheduler) // TODO: it'll work in next version
                 
                 twitterDictionaryObservable
                     >- subscribeNext { [unowned self] dictionary in

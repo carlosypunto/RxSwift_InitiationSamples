@@ -1,5 +1,5 @@
 # Podfile
 use_frameworks!
 
-pod 'RxSwift'
-pod 'RxCocoa'
+pod 'RxSwift', :git => "https://github.com/kzaher/RxSwift", :tag => 'develop'
+pod 'RxCocoa', :git => "https://github.com/kzaher/RxSwift", :tag => 'develop'
