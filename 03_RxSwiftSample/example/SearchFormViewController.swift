@@ -73,7 +73,7 @@ class SearchFormViewController: UIViewController {
                     >- filter { text in
                         self.isValidSearchText(text)
                     }
-                    >- throttle(500, self.$.mainScheduler)
+                    >- throttle(0.5, self.$.mainScheduler)
                     >- map { text in
                         self.observableForSearchWithText(text)
                     }
