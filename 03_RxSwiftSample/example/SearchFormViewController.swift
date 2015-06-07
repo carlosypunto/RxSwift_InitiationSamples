@@ -31,26 +31,17 @@ class SearchFormViewController: UIViewController {
     let disposeBag = DisposeBag()
     let searchDisposeBag = DisposeBag()
     
-    var accountChangedObservable: Observable<NSNotification>!
+    var accountChangedObservable: Observable<[ACAccount]>!
     
     var $ = Dependencies.sharedDependencies
-    
-    func showAccessDeniedAlert() {
-        let alert = UIAlertView(title: "Access Denied", message: "Please go to iPad settings app and activate twitter access for this app", delegate: nil, cancelButtonTitle: "OK")
-        alert.show()
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         resultsViewController = splitViewController!.viewControllers[1] as! SearchResultsViewController
-        
         twitterAccountType = accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
         
-        if accountStore.accountsWithAccountType(twitterAccountType).count == 0 {
-            self.searchText.text = ""
-            self.searchText.resignFirstResponder()
-            self.searchText.enabled = false
+        if getTwitterAccountsFromStore(accountStore).count == 0 {
             showAccessDeniedAlert()
         }
         else {
@@ -61,16 +52,15 @@ class SearchFormViewController: UIViewController {
         
         accountChangedObservable = NSNotificationCenter.defaultCenter().rx_notification(ACAccountStoreDidChangeNotification, object: nil)
             >- distinctUntilChanged
+            >- map { notif in
+                let accountStore = notif.object as! ACAccountStore
+                return self.getTwitterAccountsFromStore(accountStore)
+            }
         
         accountChangedObservable
-            >- subscribeNext { notif in
-                let accountStore = notif.object as? ACAccountStore
-                let accounts = accountStore?.accountsWithAccountType(accountStore!.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter))
-                if accounts?.count == 0 {
+            >- subscribeNext { accounts in
+                if accounts.count == 0 {
                     self.searchDisposeBag.dispose()
-                    self.searchText.text = ""
-                    self.searchText.resignFirstResponder()
-                    self.searchText.enabled = false
                     self.showAccessDeniedAlert()
                 }
                 else {
@@ -79,6 +69,7 @@ class SearchFormViewController: UIViewController {
                     self.createRequestAccessDisposable() 
                 }
             }
+            >- disposeBag.addDisposable
         
         self.searchText.rx_text
             >- map { text in
@@ -89,11 +80,19 @@ class SearchFormViewController: UIViewController {
             }
             >- disposeBag.addDisposable
         
-        
+    }
+    
+    func getTwitterAccountsFromStore(store: ACAccountStore) -> [ACAccount] {
+        let twitterType = store.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)!
+        let accounts = store.accountsWithAccountType(twitterType).map { x in
+            x as! ACAccount
+        }
+        return accounts
     }
     
     func createRequestAccessDisposable() {
         let requestAccess /* : Observable<Void> */ = self.observableForRequestAccessToTwitter()
+    
         requestAccess
             >- subscribeNext {
                 println("Access granted")
@@ -109,8 +108,8 @@ class SearchFormViewController: UIViewController {
         
         // workaround to RAC `then` operator
         requestAccess
+            >- observeOn(self.$.mainScheduler)
             >- subscribeCompleted {
-                println("Accounts: \(self.accountStore.accounts)")
                 self.createSearchDisposable()
             }
             >- disposeBag.addDisposable
@@ -118,22 +117,24 @@ class SearchFormViewController: UIViewController {
     
     func createSearchDisposable() {
         
-//        self.searchDisposeBag.dispose() // <<<<<<<<<< This produce an error
+        self.searchDisposeBag.dispose() 
         
-        let twitterDictionaryObservable /* : Observable<[String: AnyObject]?> */  = self.searchText.rx_text
+        self.searchText.rx_text
             >- filter { text in
-                self.isValidSearchText(text)
+                println(text)
+                return self.isValidSearchText(text)
             }
             >- throttle(0.5, self.$.mainScheduler)
+            >- distinctUntilChanged
             >- map { text in
-                self.observableForSearchWithText(text)
+                return self.observableForSearchWithText(text)
             }
             >- observeOn(self.$.backgroundWorkScheduler)
             >- concat
             >- observeOn(self.$.mainScheduler)
-        
-        twitterDictionaryObservable
             >- subscribeNext { [unowned self] dictionary in
+                
+                println(dictionary)
                 
                 if let dictionary = dictionary, let statuses = dictionary["statuses"] as? [[String: AnyObject]] {
                     let tweets = statuses.map {
@@ -145,8 +146,16 @@ class SearchFormViewController: UIViewController {
                     })
                 }
             }
-            >- self.searchDisposeBag.addDisposable
+//            >- self.searchDisposeBag.addDisposable // <<<<<<<<<< if decomment, don't work the app
         
+    }
+    
+    private func showAccessDeniedAlert() {
+        self.searchText.text = ""
+        self.searchText.resignFirstResponder()
+        self.searchText.enabled = false
+        let alert = UIAlertView(title: "Access Denied", message: "Please go to iPad settings app and activate twitter access for this app", delegate: nil, cancelButtonTitle: "OK")
+        alert.show()
     }
 
     override func didReceiveMemoryWarning() {
@@ -187,6 +196,8 @@ class SearchFormViewController: UIViewController {
     }
     
     private func observableForSearchWithText(text: String) -> Observable<[String: AnyObject]?> {
+        
+        println("create observable")
         
         let noAccountsError = NSError(domain: TwitterInstantDomain, code: TwitterInstantError.NoTwitterAccounts.rawValue, userInfo: nil)
         let invalidResponseError = NSError(domain: TwitterInstantDomain, code: TwitterInstantError.InvalidResponse.rawValue, userInfo: nil)
