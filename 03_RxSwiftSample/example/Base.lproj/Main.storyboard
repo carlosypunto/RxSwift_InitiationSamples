@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E17e" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="ZHu-CW-awn">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="ZHu-CW-awn">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -42,11 +43,34 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UXH-GH-Ntk">
+                                <rect key="frame" x="0.0" y="64" width="308" height="803"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Please log in into Twitter" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZaL-I4-uv1">
+                                        <rect key="frame" x="71" y="302" width="187" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="centerY" secondItem="ZaL-I4-uv1" secondAttribute="centerY" constant="89" id="GY5-Ig-hHn"/>
+                                    <constraint firstAttribute="centerX" secondItem="ZaL-I4-uv1" secondAttribute="centerX" constant="-10.5" id="Ohd-1u-2tm"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.8181740419708029" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="UXH-GH-Ntk" firstAttribute="leading" secondItem="NL7-It-Yje" secondAttribute="leadingMargin" id="7UJ-ue-FeX"/>
+                            <constraint firstItem="UXH-GH-Ntk" firstAttribute="top" secondItem="bZL-OL-CoO" secondAttribute="bottom" id="Ev9-bq-E1H"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="UXH-GH-Ntk" secondAttribute="trailing" id="W4a-z8-fCX"/>
+                            <constraint firstItem="ag4-Cb-tFa" firstAttribute="top" secondItem="UXH-GH-Ntk" secondAttribute="bottom" id="YOM-dc-Amz"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ugN-2z-pt1"/>
                     <connections>
+                        <outlet property="noAccountOverlay" destination="UXH-GH-Ntk" id="hp9-IG-CZr"/>
                         <outlet property="searchText" destination="Fy1-H4-zGx" id="2Ru-ZX-tRB"/>
                     </connections>
                 </viewController>

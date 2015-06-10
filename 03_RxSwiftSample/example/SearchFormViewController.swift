@@ -27,6 +27,7 @@ enum TwitterAccountState {
 class SearchFormViewController: UIViewController {
     
     @IBOutlet weak var searchText: UITextField!
+    @IBOutlet weak var noAccountOverlay: UIView!
     
     var resultsViewController: SearchResultsViewController!
     
@@ -46,33 +47,50 @@ class SearchFormViewController: UIViewController {
         resultsViewController = splitViewController!.viewControllers[1] as! SearchResultsViewController
         twitterAccountType = accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
         
-        let requestAccess /* : Observable<TwitterAccountState> */ = self.observableForRequestAccessToTwitter()
+        let requestAccess /* : Observable<TwitterAccountState> */ = createTwitterAccountObservable() >- variable
         
         requestAccess
-            >- subscribeNext { access in
+            >- subscribeNext { [unowned self] access in
                 switch access {
                 case .TwitterAccounts(let accounts):
-                    println("Access granted \(accounts)")
-                    self.createSearchDisposable()
+                    let hidden = accounts.count != 0
+                    println("\(self.noAccountOverlay)\(hidden)")
+                    self.noAccountOverlay.hidden = hidden
                 case .AccessDenied:
                     println("Access denied")
-                    self.searchDisposeBag.dispose()
+                    self.noAccountOverlay.hidden = true
                     self.showAccessDeniedAlert()
                 }
-                
-                
+            }
+            >- disposeBag.addDisposable
+        
+        requestAccess
+            >- map { [unowned self] twitterState in
+                switch twitterState {
+                case .TwitterAccounts(let accounts):
+                    if accounts.count > 0 {
+                        return self.searchResultsForAccount(accounts[0])
+                    }
+                    else {
+                        return just([])
+                    }
+                case .AccessDenied:
+                    return just([])
+                }
+            }
+            >- switchLatest
+            >- subscribeNext { [unowned self] tweets in
+                self.resultsViewController.tweets = tweets
             }
             >- disposeBag.addDisposable
         
         self.searchText.rx_text
-            >- map { text in
-                self.isValidSearchText(text) ? UIColor.whiteColor() : UIColor.yellowColor()
-            }
-            >- subscribeNext { [unowned self] color in
-                self.searchText.backgroundColor = color
+            // you can do map or just transform in subscribeNext
+            >- subscribeNext { text in
+                let backgroundColor = self.isValidSearchText(text) ? UIColor.whiteColor() : UIColor.yellowColor()
+                self.searchText.backgroundColor = backgroundColor
             }
             >- disposeBag.addDisposable
-        
     }
     
     private func showAccessDeniedAlert() {
@@ -99,7 +117,7 @@ class SearchFormViewController: UIViewController {
         return accounts
     }
     
-    private func observableForRequestAccessToTwitter() -> Observable<TwitterAccountState> {
+    private func createTwitterAccountObservable() -> Observable<TwitterAccountState> {
         
         let accessDeniedError = NSError(domain: TwitterInstantDomain, code: TwitterInstantError.AccessDenied.rawValue, userInfo: nil)
         
@@ -121,10 +139,8 @@ class SearchFormViewController: UIViewController {
                 let accounts = self.getTwitterAccountsFromStore(accountStore)
                 return .TwitterAccounts(accounts: accounts)
         }
-        //            >- distinctUntilChanged
         
         return merge(returnElements(observable1, observable2))
-        
     }
     
     private func requestforTwitterSearchWithText(text: String) -> SLRequest {
@@ -133,73 +149,61 @@ class SearchFormViewController: UIViewController {
         return SLRequest(forServiceType: SLServiceTypeTwitter, requestMethod: .GET, URL: url, parameters: params)
     }
     
-    private func observableForSearchWithText(text: String) -> Observable<[String: AnyObject]?> {
+    private func twitterSearchAPICall(account: ACAccount, text: String) -> Observable<[String: AnyObject]> {
         
         println("create observable")
         
         let noAccountsError = NSError(domain: TwitterInstantDomain, code: TwitterInstantError.NoTwitterAccounts.rawValue, userInfo: nil)
         let invalidResponseError = NSError(domain: TwitterInstantDomain, code: TwitterInstantError.InvalidResponse.rawValue, userInfo: nil)
         
-        return create { observer in
-            let task = { [unowned self] () -> Void in
-                
-                let request = self.requestforTwitterSearchWithText(text)
-                let twitterAccounts = self.accountStore.accountsWithAccountType(self.twitterAccountType)
-                
-                if twitterAccounts.count == 0 {
-                    observer.on(.Error(noAccountsError))
-                    observer.on(.Completed)
-                }
-                else {
-                    request.account = twitterAccounts.last as! ACAccount
-                    request.performRequestWithHandler { data, urlResponse, error in
-                        if urlResponse.statusCode == 200 {
-                            let timelineData = NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments, error: nil) as? [String: AnyObject]
-                            observer.on(.Next(RxBox(timelineData)))
-                        }
-                        else {
-                            observer.on(.Error(invalidResponseError))
-                        }
-                        observer.on(.Completed)
-                    }
-                }
+        let request = self.requestforTwitterSearchWithText(text)
+        request.account = account
+        
+        let urlSession = NSURLSession.sharedSession()
+        
+        return urlSession.rx_JSON(request.preparedURLRequest())
+            >- mapOrDie { url in
+                return castOrFail(url)
             }
-            task()
-            return AnonymousDisposable {}
-        }
     }
     
     // MARK: Create Search in Twitter Disposable
     
-    func createSearchDisposable() {
+    func searchResultsForAccount(account: ACAccount) -> Observable<[Tweet]> {
         
         self.searchDisposeBag.dispose() 
         
-        self.searchText.rx_text
-            >- filter { text in
+        let distinctText: Observable<String> = self.searchText.rx_text
+            >- filter { (text: String) -> Bool in
                 println(text)
                 return self.isValidSearchText(text)
             }
             >- throttle(0.5, self.$.mainScheduler)
-            >- distinctUntilChanged
-            >- map { text in
-                return self.observableForSearchWithText(text)
+            >- distinctUntilChanged { (lhs: String, rhs: String) -> Bool in
+                return lhs == rhs
             }
+            
+        return distinctText
+            >- map { text in
+                return self.twitterSearchAPICall(account, text: text)
+                    >- catch([:])
+            }
+            >- switchLatest
             >- observeOn(self.$.backgroundWorkScheduler)
-            >- concat
             >- observeOn(self.$.mainScheduler)
-            >- subscribeNext { [unowned self] dictionary in
-                if let dictionary = dictionary, let statuses = dictionary["statuses"] as? [[String: AnyObject]] {
+            >- map { dictionary in
+                if  let statuses = dictionary["statuses"] as? [[String: AnyObject]] {
                     let tweets = statuses.map {
-                        Tweet.tweetWithStatus($0)
+                        return Tweet.tweetWithStatus($0)
                     }
                     
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.resultsViewController.tweets = tweets
-                    })
+                    return tweets
                 }
-        }
-        //            >- self.searchDisposeBag.addDisposable // <<<<<<<<<< if decomment, don't work the app
+                else {
+                    return []
+                }
+            }
+            >- observeOn(MainScheduler.sharedInstance)
         
     }
 
