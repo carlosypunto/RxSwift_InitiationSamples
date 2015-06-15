@@ -16,9 +16,8 @@ profile
 docset-installed.txt
 .DS_Store
 
-Podfile.lock
-
-
-/01_RxSwiftSample/Pods/**/*
-/02_RxSwiftSample/Pods/**/*
-/03_RxSwiftSample/Pods/**/*
+/01_RxSwiftSample/Pods
+/02_RxSwiftSample/Pods
+/03_RxSwiftSample/Pods
+/04_SimpleWeather/Pods
+/05_Touches/Pods

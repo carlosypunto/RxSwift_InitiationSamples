@@ -1,0 +1,6 @@
+# Podfile
+use_frameworks!
+
+pod 'RxSwift'
+pod 'RxCocoa'
+pod 'SwiftyJSON', '~> 2.2'
