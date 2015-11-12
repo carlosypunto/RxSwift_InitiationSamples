@@ -56,6 +56,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             .observeOn(MainScheduler.sharedInstance)
             .subscribeNext { (conditions, daily, hourly) in
                 
+                print(hourly)
+                
                 self.updating = false
                 
                 self.cityLabel.text = conditions.locationName
@@ -196,6 +198,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         cell?.textLabel?.textColor = UIColor.whiteColor()
         cell?.detailTextLabel?.textColor = UIColor.whiteColor()
         
+        cell?.textLabel?.backgroundColor = UIColor.clearColor()
+        cell?.detailTextLabel?.backgroundColor = UIColor.clearColor()
+        
         return cell!
     }
     
@@ -204,6 +209,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         cell?.textLabel?.text = title
         cell?.detailTextLabel?.text = ""
         cell?.imageView?.image = nil
+        
+        cell?.textLabel?.backgroundColor = UIColor.clearColor()
+        cell?.detailTextLabel?.backgroundColor = UIColor.clearColor()
     }
     
     func configureConditionCell(cell: UITableViewCell?, condition: Condition, cellType: CellType) {
@@ -219,6 +227,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             cell?.textLabel?.text = hourlyFormatter.stringFromDate(condition.date)
             cell?.detailTextLabel?.text = "\(condition.temperature)°"
         }
+        
+        cell?.textLabel?.backgroundColor = UIColor.clearColor()
+        cell?.detailTextLabel?.backgroundColor = UIColor.clearColor()
     }
     
     
