@@ -1,2 +1,2 @@
-# RxSwift_InitiationCouse
+# RxSwift_InitiationSamples
 
