@@ -1,6 +1,9 @@
-# Podfile
+
+platform :ios, '8.0'
 use_frameworks!
 
-pod 'RxSwift'
-pod 'RxCocoa'
-pod 'SwiftyJSON', '~> 2.2'
+xcodeproj 'SimpleWeather'
+
+pod 'RxSwift', '~> 2.0.0-beta.2'
+pod 'RxCocoa', '~> 2.0.0-beta.2'
+pod 'SwiftyJSON', '~> 2.3'

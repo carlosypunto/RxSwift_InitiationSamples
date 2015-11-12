@@ -16,7 +16,7 @@
 		07A448691B2A4B7E009D4E3A /* Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A448681B2A4B7E009D4E3A /* Manager.swift */; };
 		07A4486B1B2A4D18009D4E3A /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A4486A1B2A4D18009D4E3A /* Client.swift */; };
 		07A4486D1B2AD6BB009D4E3A /* Condition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A4486C1B2AD6BB009D4E3A /* Condition.swift */; };
-		BFA34256BF98C7503504B39D /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1DD439D2DABA3FA617038CF /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		BFA34256BF98C7503504B39D /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1DD439D2DABA3FA617038CF /* Pods.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -192,7 +192,9 @@
 		07A4483B1B29D3A9009D4E3A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftMigration = 0710;
+				LastSwiftUpdateCheck = 0710;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Carlos García";
 				TargetAttributes = {
 					07A448421B29D3A9009D4E3A = {
@@ -363,6 +365,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -430,6 +433,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SimpleWeather/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cgn.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -441,6 +445,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SimpleWeather/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cgn.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -459,6 +464,7 @@
 				);
 				INFOPLIST_FILE = SimpleWeatherTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cgn.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SimpleWeather.app/SimpleWeather";
 			};
@@ -474,6 +480,7 @@
 				);
 				INFOPLIST_FILE = SimpleWeatherTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cgn.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SimpleWeather.app/SimpleWeather";
 			};

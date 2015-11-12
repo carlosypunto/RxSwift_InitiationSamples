@@ -9,7 +9,7 @@
 import Foundation
 import SwiftyJSON
 
-struct Condition: Printable {
+struct Condition: CustomStringConvertible {
     
     let date: NSDate
     let humidity: Int

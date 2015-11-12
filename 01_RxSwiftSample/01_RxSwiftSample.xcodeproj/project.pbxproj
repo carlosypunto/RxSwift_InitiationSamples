@@ -12,7 +12,7 @@
 		07EE26A41B0A0A67004E47DC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 07EE26A21B0A0A67004E47DC /* Main.storyboard */; };
 		07EE26A61B0A0A67004E47DC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07EE26A51B0A0A67004E47DC /* Images.xcassets */; };
 		07EE26A91B0A0A67004E47DC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 07EE26A71B0A0A67004E47DC /* LaunchScreen.xib */; };
-		7586BD9876D556FAB3202B2E /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B2AE88D24028F592BBC26C /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		7586BD9876D556FAB3202B2E /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B2AE88D24028F592BBC26C /* Pods.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -125,6 +125,8 @@
 		07EE26911B0A0A67004E47DC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0710;
+				LastSwiftUpdateCheck = 0710;
 				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = "Carlos García";
 				TargetAttributes = {

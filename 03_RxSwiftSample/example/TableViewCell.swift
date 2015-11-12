@@ -17,17 +17,18 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var twitterUsernameText: UILabel!
     
     let $ = Dependencies.sharedDependencies
-    let disposeBag = DisposeBag()
+    var disposeBag = DisposeBag()
 
     override func prepareForReuse() {
-        disposeBag.dispose()
+        disposeBag = DisposeBag()
     }
     
     func putImage(url: String) {
         observableForLoadingImage(url)
-            >- subscribeNext { [unowned self] image in
+            .subscribeNext { [unowned self] image in
                 self.twitterAvatarView.image = image
             }
+            .addDisposableTo(disposeBag)
     }
     
     // MARK: - observable
@@ -36,11 +37,11 @@ class TableViewCell: UITableViewCell {
         let url = NSURL(string: imageUrl)!
         let request = NSURLRequest(URL: url)
         return NSURLSession.sharedSession().rx_data(request)
-            >- observeSingleOn($.backgroundWorkScheduler)
-            >- map { data in
+            .observeOn($.backgroundWorkScheduler)
+            .map { data in
                 UIImage(data: data)
             }
-            >- observeSingleOn($.mainScheduler)
+            .observeOn($.mainScheduler)
     }
 
 }

@@ -15,9 +15,9 @@ struct Client {
     
     func fetchCurrentConditionsForLocation(coordinate: CLLocationCoordinate2D) -> Observable<Condition> {
         let url = NSURL(string: "http://api.openweathermap.org/data/2.5/weather?lat=\(coordinate.latitude)&lon=\(coordinate.longitude)&units=metric")!
-        println(url.absoluteString!)
+        print(url.absoluteString)
         return NSURLSession.sharedSession().rx_JSON(url)
-            >- map { json in
+            .map { json in
                 return Condition.conditionFromObject(json)
             }
         
@@ -25,9 +25,9 @@ struct Client {
     
     func fetchHourlyForecastForLocation(coordinate: CLLocationCoordinate2D) -> Observable<[Condition]> {
         let url = NSURL(string: "http://api.openweathermap.org/data/2.5/forecast?lat=\(coordinate.latitude)&lon=\(coordinate.longitude)units=metric&cnt=12")!
-        println(url.absoluteString!)
+        print(url.absoluteString)
         return NSURLSession.sharedSession().rx_JSON(url)
-            >- map { json in
+            .map { json in
                 return Condition.conditionListFromObject(json)
             }
         
@@ -35,9 +35,9 @@ struct Client {
     
     func fetchDailyForecastForLocation(coordinate: CLLocationCoordinate2D) -> Observable<[Condition]> {
         let url = NSURL(string: "http://api.openweathermap.org/data/2.5/forecast/daily?lat=\(coordinate.latitude)&lon=\(coordinate.longitude)&units=metric&cnt=7")!
-        println(url.absoluteString!)
+        print(url.absoluteString)
         return NSURLSession.sharedSession().rx_JSON(url)
-            >- map { json in
+            .map { json in
                 return Condition.conditionListFromDailyObject(json)
             }
         

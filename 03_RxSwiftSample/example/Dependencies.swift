@@ -13,8 +13,8 @@ public class Dependencies {
 	
 	public static let sharedDependencies = Dependencies() // Singleton
 	
-	let backgroundWorkScheduler: ImmediateScheduler
-	let mainScheduler: DispatchQueueScheduler
+	let backgroundWorkScheduler: ImmediateSchedulerType
+	let mainScheduler: SerialDispatchQueueScheduler
 	
 	private init() {
 		let operationQueue = NSOperationQueue()
@@ -25,4 +25,9 @@ public class Dependencies {
 		mainScheduler = MainScheduler.sharedInstance
     }
 	
+}
+
+
+func exampleError(error: String, location: String = "\(__FILE__):\(__LINE__)") -> NSError {
+    return NSError(domain: "ExampleError", code: -1, userInfo: [NSLocalizedDescriptionKey: "\(location): \(error)"])
 }

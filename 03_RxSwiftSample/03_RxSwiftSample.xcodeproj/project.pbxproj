@@ -18,7 +18,7 @@
 		07EE26A41B0A0A67004E47DC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 07EE26A21B0A0A67004E47DC /* Main.storyboard */; };
 		07EE26A61B0A0A67004E47DC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07EE26A51B0A0A67004E47DC /* Images.xcassets */; };
 		07EE26A91B0A0A67004E47DC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 07EE26A71B0A0A67004E47DC /* LaunchScreen.xib */; };
-		7586BD9876D556FAB3202B2E /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B2AE88D24028F592BBC26C /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		7586BD9876D556FAB3202B2E /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B2AE88D24028F592BBC26C /* Pods.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -145,7 +145,9 @@
 		07EE26911B0A0A67004E47DC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftMigration = 0710;
+				LastSwiftUpdateCheck = 0710;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Carlos García";
 				TargetAttributes = {
 					07EE26981B0A0A67004E47DC = {
@@ -289,6 +291,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -356,6 +359,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cgn.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = 03_RxSwiftSample;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -368,6 +372,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cgn.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = 03_RxSwiftSample;
 				TARGETED_DEVICE_FAMILY = 2;
 			};

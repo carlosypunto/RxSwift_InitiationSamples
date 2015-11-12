@@ -34,11 +34,11 @@ class Manager: NSObject, CLLocationManagerDelegate {
         let backgroundWorkScheduler = OperationQueueScheduler(operationQueue: operationQueue)
         
         self.data = NSNotificationCenter.defaultCenter().rx_notification(LocationUpdateNotificationName, object: nil)
-            >- map { notif in 
+            .map { notif in 
                 (notif.object as! CLLocation).coordinate
             }
-            >- observeOn(backgroundWorkScheduler)
-            >- map { location in
+            .observeOn(backgroundWorkScheduler)
+            .map { location -> Observable<(Condition, [Condition], [Condition])> in
                 let updateCurrentConditions = client.fetchCurrentConditionsForLocation(location)
                 let updateDailyForecast = client.fetchDailyForecastForLocation(location)
                 let updateHourlyForecast = client.fetchHourlyForecastForLocation(location)
@@ -46,10 +46,10 @@ class Manager: NSObject, CLLocationManagerDelegate {
                 return zip(updateCurrentConditions, updateDailyForecast, updateHourlyForecast) { conditions, daily, hourly in
                     return (conditions, daily, hourly)
                     }
-                    >- observeOn(backgroundWorkScheduler)
+                    .observeOn(backgroundWorkScheduler)
             }
-            >- switchLatest
-            >- variable
+            .switchLatest()
+            .shareReplay(1)
         
         super.init()
         locationManager.delegate = self
@@ -65,13 +65,12 @@ class Manager: NSObject, CLLocationManagerDelegate {
     
     // MARK: CLLocationManagerDelegate
     
-    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if isFirstUpdate {
             isFirstUpdate = false
             return
         }
-        let location = locations.last as? CLLocation
-        if let location = location {
+        if let location = locations.last {
             if location.horizontalAccuracy > 0 {
                 NSNotificationCenter.defaultCenter().postNotificationName(LocationUpdateNotificationName, object: location)
                 locationManager.stopUpdatingLocation()

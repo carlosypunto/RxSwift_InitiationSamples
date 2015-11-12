@@ -53,8 +53,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         makeUI()
         
         manager.data
-            >- observeOn(MainScheduler.sharedInstance)
-            >- subscribeNext { (conditions, daily, hourly) in
+            .observeOn(MainScheduler.sharedInstance)
+            .subscribeNext { (conditions, daily, hourly) in
                 
                 self.updating = false
                 
@@ -68,7 +68,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 self.dailyForecast = daily
                 self.tableView.reloadData()
             }
-            >- disposeBag.addDisposable
+            .addDisposableTo(disposeBag)
         
         manager.findCurrentLocation()
         
@@ -167,7 +167,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cellIdentifier = "Cell"
-        var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) as? UITableViewCell
+        var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier)
         if cell == nil {
             cell = UITableViewCell(style: .Value1, reuseIdentifier: cellIdentifier)
         }

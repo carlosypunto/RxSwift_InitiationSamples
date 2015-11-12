@@ -31,28 +31,28 @@ class ViewController: UIViewController {
         
         // textField1Observable is an Observable of type String
         // textField1Observable fire an Event.Next every time you add a character into textField1
-        let textField1Observable /*: Observable<String> */ = textField1.rx_text
+        let textField1Observable /*: Observable<String> */ = textField1.rx_text.asObservable()
         
         // subscribeNext returns a disposable (only for Events of .Next type) subscribed to the Observable
-        let textField1Disposable /*: Disposable */ = textField1Observable
-            >- subscribeNext { text in
+        let textField1Disposable /*: Disposable */ = textField1Observable.asObservable()
+            .subscribeNext { text in
                 self.label1.text = text
             }
         
         // We can create as many disposables of a observable as you want
         // in this case, we assign it to an instance variable to access from the button's IBAction
         instanceDisposable = textField1Observable
-            >- subscribeNext { text in
+            .subscribeNext { text in
                 self.label2.text = text
             }
         
         // We can to chain operations
         // in this we filter the observable .Next results
         textField1Observable
-            >- filter { text in
-                count(text) > 2
+            .filter { text in
+                text.utf8.count > 2
             }
-            >- subscribeNext { text in
+            .subscribeNext { text in
                 self.label3.text = text
             }
         

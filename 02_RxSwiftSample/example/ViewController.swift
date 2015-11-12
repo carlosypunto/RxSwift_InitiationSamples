@@ -19,7 +19,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     var disposeBag = DisposeBag()
-    var backgroundWorkScheduler: ImmediateScheduler!
+    var backgroundWorkScheduler: ImmediateSchedulerType!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,33 +33,35 @@ class ViewController: UIViewController {
         /* map function transform a sequence of a type in another sequence of diferent type */
         let validUsernameSignal /* : Observable<Bool> */ = usernameTextField.rx_text
             // map Observable<String> to an Observable<Bool>
-            >- map { text in
+            .map { text in
                 self.isValidUsername(text)
-        }
+            }
         
         let validPasswordSignal /* : Observable<Bool> */ = passwordTextField.rx_text
             // map Observable<String> to an Observable<Bool>
-            >- map { text in
+            .map { text in
                 self.isValidPassword(text)
-        }
+            }
         
         validUsernameSignal
             // map Observable<Bool> to an Observable<UIColor>
-            >- map { isValid in
+            .map { isValid in
                 isValid ? UIColor.clearColor() : UIColor.yellowColor()
             }
-            >- subscribeNext { [unowned self] color in
+            .subscribeNext { [unowned self] color in
                 self.usernameTextField.backgroundColor = color
             }
+            .addDisposableTo(disposeBag)
         
         validPasswordSignal
             // map Observable<Bool> to an Observable<UIColor>
-            >- map { isValid in
+            .map { isValid in
                 isValid ? UIColor.clearColor() : UIColor.yellowColor()
             }
-            >- subscribeNext { [unowned self] color in
+            .subscribeNext { [unowned self] color in
                 self.passwordTextField.backgroundColor = color
-        }
+            }
+            .addDisposableTo(disposeBag)
         
         // you can combine multiples observable
         let signUpActiveSignal /*: Observable<Bool> */ = combineLatest(validUsernameSignal, validPasswordSignal) { isValidUserName, isValidPassword in
@@ -68,28 +70,27 @@ class ViewController: UIViewController {
         
         // suscribing to an combined observable
         signUpActiveSignal
-            >- subscribeNext { [unowned self] valid in
+            .subscribeNext { [unowned self] valid in
                 self.signInButton.enabled = valid
             }
-            >- disposeBag.addDisposable
+            .addDisposableTo(disposeBag)
         // Note:
-        // DisposeBag retains the disposable, otherwise it will attempt to retain a deallocated object (Test to run the a app commenting the line '>- disposeBag.addDisposable')
+        // DisposeBag retains the disposable, otherwise it will attempt to retain a deallocated object (Test to run the a app commenting the line '.disposeBag.addDisposable')
         // The previous disposable we could have assigned to an instance variable, but add this to save DisposeBag instance variables in case you have to hold several disposables
         // Moreover, DisposeBag has a `dispose()` method, which dispose all observable added to it
         
         
-        signInButton.rx_tap
-            >- doOnNext {
-                self.signInButton.enabled = false
-                self.signInFailureText.hidden = true
-                self.activityIndicator.startAnimating()
+        self.signInButton.enabled = false
+        self.signInFailureText.hidden = true
+        self.activityIndicator.startAnimating()
+        signInButton.rx_tap.asObservable()
+
+            .flatMap {
+                self.checkLogin(username: self.usernameTextField.text!, password: self.passwordTextField.text!)
+                    .observeOn(self.backgroundWorkScheduler) 
             }
-            >- flatMap {
-                self.checkLogin(username: self.usernameTextField.text, password: self.passwordTextField.text) 
-                    >- observeOn(self.backgroundWorkScheduler) 
-            }
-            >- observeOn(MainScheduler.sharedInstance) 
-            >- subscribeNext { valid in
+            .observeOn(MainScheduler.sharedInstance) 
+            .subscribeNext { valid in
                 self.activityIndicator.stopAnimating()
                 self.signInFailureText.hidden = valid
                 self.signInButton.enabled = true
@@ -102,31 +103,31 @@ class ViewController: UIViewController {
                     self.signInButton.enabled = false
                 }
             }
-            >- disposeBag.addDisposable
+            .addDisposableTo(disposeBag)
     }
     
     // MARK: - Validate string functions
     
     func isValidUsername(username: String) -> Bool {
-        return count(username) > 3
+        return username.characters.count > 3
     }
     
     func isValidPassword(password: String) -> Bool {
-        return count(password) > 3
+        return password.characters.count > 3
     }
     
     // MARK: - Create a custom Observable
     
-    func checkLogin(#username: String, password: String) -> Observable<Bool> {
+    func checkLogin(username username: String, password: String) -> Observable<Bool> {
         
         return create { observer in
             let task = {
                 DummyAsynchronousService().singInWithUserName(username, password: password) { success in
                     if success {
-                        observer.on(.Next(RxBox(true)))
+                        observer.on(.Next(true))
                     }
                     else {
-                        observer.on(.Next(RxBox(false)))
+                        observer.on(.Next(false))
                     }
                     observer.on(.Completed)
                 }
@@ -138,8 +139,6 @@ class ViewController: UIViewController {
         }
         
     }
-    
-    
     
 }
 
