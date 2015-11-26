@@ -16,13 +16,14 @@ class ViewController: UIViewController {
     @IBOutlet var label1: UILabel!
     @IBOutlet var label2: UILabel!
     @IBOutlet var label3: UILabel!
+    @IBOutlet weak var button: UIButton!
     
-    var instanceDisposable: Disposable? //
-
+    let disposeBag = DisposeBag()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // In RxSwift we have two main types, Observables (a Sequence) y Disposables (Observers)
+        // In RxSwift, we have two main types, Observables (a Sequence) y Disposables (Observers)
         //   - Observables are objects that can change in value over time, triggering an Event when this happens
         //   - Disposables are responsible to do something when an Observable (to which it is subscribed) triggers an event
         
@@ -30,19 +31,21 @@ class ViewController: UIViewController {
         // Both .Next as an error have an associated type, Box<T> in the case of .Next and ErrorType (is an NSError) in the case of .Error
         
         // textField1Observable is an Observable of type String
-        // textField1Observable fire an Event.Next every time you add a character into textField1
-        let textField1Observable /*: Observable<String> */ = textField1.rx_text.asObservable()
+        // textField1Observable fires an Event.Next every time you add a character into textField1
+        let textField1Observable /*: Observable<String> */ = textField1.rx_text
         
-        // subscribeNext returns a disposable (only for Events of .Next type) subscribed to the Observable
-        let textField1Disposable /*: Disposable */ = textField1Observable.asObservable()
-            .subscribeNext { text in
+        // _ is used to supress compiler warnings
+        _ = textField1Observable
+            .subscribeNext { [unowned self] text in
                 self.label1.text = text
             }
+            .addDisposableTo(disposeBag)
         
+        // subscribeNext returns a disposable (only for Events of .Next type) subscribed to the Observable
         // We can create as many disposables of a observable as you want
         // in this case, we assign it to an instance variable to access from the button's IBAction
-        instanceDisposable = textField1Observable
-            .subscribeNext { text in
+        let instanceDisposable: Disposable = textField1Observable
+            .subscribeNext { [unowned self] text in
                 self.label2.text = text
             }
         
@@ -52,16 +55,21 @@ class ViewController: UIViewController {
             .filter { text in
                 text.utf8.count > 2
             }
-            .subscribeNext { text in
+            .subscribeNext { [unowned self] text in
                 self.label3.text = text
             }
+            .addDisposableTo(disposeBag)
         
+        // We can replace button action-target pattern with rx_tap
+        // dispose() terminates observing so in that case label won't be updated anymore
+        button
+            .rx_tap
+            .subscribeNext { _ in
+                instanceDisposable.dispose()
+            }
+            .addDisposableTo(disposeBag)
+        // It's important to use addDisposableTo(disposeBag)
+        // More info is here: https://github.com/ReactiveX/RxSwift/blob/master/Documentation/GettingStarted.md#disposing
     }
-
-    @IBAction func completeInstanceObservable(sender: AnyObject) {
-        // stop listening
-        instanceDisposable?.dispose()
-    }
-
 }
 
