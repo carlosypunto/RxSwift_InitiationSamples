@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14E17e" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="3Cp-So-Gdc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="15C47a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="3Cp-So-Gdc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -11,6 +12,7 @@
                 <navigationController definesPresentationContext="YES" id="3Cp-So-Gdc" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="YGO-oT-uiY">
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </navigationBar>
                     <connections>
                         <segue destination="Bku-Il-Wq0" kind="relationship" relationship="rootViewController" id="x1D-2c-48i"/>
@@ -34,6 +36,7 @@
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="username" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="m6l-hW-lH1">
                                 <rect key="frame" x="45" y="105" width="223" height="30"/>
+                                <animations/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="y4B-Ps-Uhu"/>
                                 </constraints>
@@ -42,11 +45,13 @@
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3qt-Tm-QLH">
                                 <rect key="frame" x="45" y="152" width="223" height="30"/>
+                                <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TM9-GL-BlB">
                                 <rect key="frame" x="192" y="206" width="76" height="30"/>
+                                <animations/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="76" id="jLB-oa-c25"/>
                                 </constraints>
@@ -56,6 +61,7 @@
                             </button>
                             <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bab credentials try with words 'user' and 'password'" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kJD-IT-3Eg">
                                 <rect key="frame" x="45" y="205" width="150" height="65"/>
+                                <animations/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="65" id="5De-da-C4R"/>
                                     <constraint firstAttribute="width" constant="150" id="5Tb-IE-8xd"/>
@@ -66,20 +72,22 @@
                             </label>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ry8-Pk-Sk1">
                                 <rect key="frame" x="220" y="239" width="20" height="20"/>
+                                <animations/>
                             </activityIndicatorView>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="m6l-hW-lH1" firstAttribute="top" secondItem="gSG-e0-sPk" secondAttribute="bottom" constant="41" id="Ajt-ay-G6E"/>
                             <constraint firstItem="ry8-Pk-Sk1" firstAttribute="top" secondItem="TM9-GL-BlB" secondAttribute="bottom" constant="3" id="Dyn-eH-uDI"/>
                             <constraint firstItem="3qt-Tm-QLH" firstAttribute="leading" secondItem="aec-cr-Kll" secondAttribute="leadingMargin" constant="29" id="NdK-6I-GAi"/>
                             <constraint firstItem="kJD-IT-3Eg" firstAttribute="top" secondItem="3qt-Tm-QLH" secondAttribute="bottom" constant="23" id="SAf-oP-o3N"/>
-                            <constraint firstItem="ry8-Pk-Sk1" firstAttribute="leading" secondItem="kJD-IT-3Eg" secondAttribute="trailing" constant="25" id="Xe9-Bf-knT"/>
                             <constraint firstAttribute="trailingMargin" secondItem="3qt-Tm-QLH" secondAttribute="trailing" constant="36" id="aDm-ro-6dE"/>
                             <constraint firstItem="TM9-GL-BlB" firstAttribute="trailing" secondItem="3qt-Tm-QLH" secondAttribute="trailing" id="aak-Q8-eCz"/>
                             <constraint firstItem="TM9-GL-BlB" firstAttribute="top" secondItem="3qt-Tm-QLH" secondAttribute="bottom" constant="24" id="bAv-3t-zV1"/>
                             <constraint firstItem="3qt-Tm-QLH" firstAttribute="top" secondItem="m6l-hW-lH1" secondAttribute="bottom" constant="17" id="bPf-UX-UZF"/>
                             <constraint firstAttribute="trailingMargin" secondItem="m6l-hW-lH1" secondAttribute="trailing" constant="36" id="hlo-RQ-Tn6"/>
+                            <constraint firstItem="ry8-Pk-Sk1" firstAttribute="centerX" secondItem="TM9-GL-BlB" secondAttribute="centerX" id="l44-LY-smQ"/>
                             <constraint firstItem="m6l-hW-lH1" firstAttribute="leading" secondItem="aec-cr-Kll" secondAttribute="leadingMargin" constant="29" id="oep-98-vgh"/>
                             <constraint firstItem="kJD-IT-3Eg" firstAttribute="leading" secondItem="aec-cr-Kll" secondAttribute="leadingMargin" constant="29" id="suI-zM-WVd"/>
                         </constraints>
@@ -109,6 +117,7 @@
                     <view key="view" contentMode="scaleToFill" id="RwN-Dx-gHF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Other VC" id="RmC-zs-Atf"/>
@@ -118,9 +127,4 @@
             <point key="canvasLocation" x="297" y="-207"/>
         </scene>
     </scenes>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
-    </simulatedMetricsContainer>
 </document>

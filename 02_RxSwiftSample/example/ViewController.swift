@@ -82,15 +82,15 @@ class ViewController: UIViewController {
         
         self.signInButton.enabled = false
         self.signInFailureText.hidden = true
-        self.activityIndicator.startAnimating()
+        
         signInButton.rx_tap.asObservable()
-
+            .doOn(onNext: { [unowned self] in self.activityIndicator.startAnimating() })
             .flatMap {
                 self.checkLogin(username: self.usernameTextField.text!, password: self.passwordTextField.text!)
                     .observeOn(self.backgroundWorkScheduler) 
             }
             .observeOn(MainScheduler.sharedInstance) 
-            .subscribeNext { valid in
+            .subscribeNext { [unowned self] valid in
                 self.activityIndicator.stopAnimating()
                 self.signInFailureText.hidden = valid
                 self.signInButton.enabled = true

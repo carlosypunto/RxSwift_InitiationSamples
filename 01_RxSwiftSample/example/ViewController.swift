@@ -61,15 +61,15 @@ class ViewController: UIViewController {
             .addDisposableTo(disposeBag)
         
         // We can replace button action-target pattern with rx_tap
-        // dispose() terminates observing so in that case label won't be updated anymore
         button
             .rx_tap
             .subscribeNext { _ in
+                // dispose() terminates observing so in that case label won't be updated anymore
                 instanceDisposable.dispose()
             }
             .addDisposableTo(disposeBag)
         // It's important to use addDisposableTo(disposeBag)
-        // More info is here: https://github.com/ReactiveX/RxSwift/blob/master/Documentation/GettingStarted.md#disposing
+        // More info is here: http://guides.rxswift.org/intro/#disposing:34c4da6d4768d05e50db99357a299b5c
     }
 }
 

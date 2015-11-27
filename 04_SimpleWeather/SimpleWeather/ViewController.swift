@@ -54,7 +54,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         manager.data
             .observeOn(MainScheduler.sharedInstance)
-            .subscribeNext { (conditions, daily, hourly) in
+            .subscribeNext { [unowned self] (conditions, daily, hourly) in
                 
                 print(hourly)
                 

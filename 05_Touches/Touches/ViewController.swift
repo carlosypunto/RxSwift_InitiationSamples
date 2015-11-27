@@ -54,7 +54,7 @@ class ViewController: UIViewController {
                     } .takeUntil(endedLocations)
             }
             .merge()
-            .subscribeNext { difference in
+            .subscribeNext { [unowned self] difference in
                 print(difference)
                 var point = self.myView.center
                 point.x += difference.0

@@ -27,7 +27,7 @@ enum TwitterAccountState {
 class SearchFormViewController: UIViewController {
     
     @IBOutlet weak var searchText: UITextField!
-    @IBOutlet weak var noAccountOverlay: UIView!
+    var noAccountOverlay: UILabel?
     
     var resultsViewController: SearchResultsViewController!
     
@@ -40,37 +40,28 @@ class SearchFormViewController: UIViewController {
     var accountChangedObservable: Observable<[ACAccount]>!
     
     var $ = Dependencies.sharedDependencies
+        
+    var requestAccess: Observable<TwitterAccountState>!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        resultsViewController = splitViewController!.viewControllers[1] as! SearchResultsViewController
-        twitterAccountType = accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
-        
-        let requestAccess /* : Observable<TwitterAccountState> */ = createTwitterAccountObservable()
+        requestAccess = self.createTwitterAccountObservable()
             .shareReplay(1)
         
-        requestAccess
-            .subscribeNext { [unowned self] access in
-                switch access {
-                case .TwitterAccounts(let accounts):
-                    let hidden = accounts.count != 0
-                    print("\(self.noAccountOverlay)\(hidden)")
-                    self.noAccountOverlay.hidden = hidden
-                case .AccessDenied:
-                    print("Access denied")
-                    self.noAccountOverlay.hidden = true
-                    self.showAccessDeniedAlert()
-                }
-            }
-            .addDisposableTo(disposeBag)
-        
+        resultsViewController = splitViewController!.viewControllers[1] as! SearchResultsViewController
+        twitterAccountType = accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
         
         requestAccess
             .map({ (twitterAccountState) -> Observable<[Tweet]> in
                 switch twitterAccountState {
                 case .TwitterAccounts(let accounts):
-                    return self.searchResultsForAccount(accounts[0])
+                    if accounts.count > 0 {
+                        return self.searchResultsForAccount(accounts[0])
+                    }
+                    else {
+                        return just([])
+                    }
                 default:
                     return just([])
                 }
@@ -83,7 +74,7 @@ class SearchFormViewController: UIViewController {
         
         self.searchText.rx_text
             // you can do map or just transform in subscribeNext
-            .subscribeNext { text in
+            .subscribeNext { [unowned self] text in
                 let backgroundColor = self.isValidSearchText(text) ? UIColor.whiteColor() : UIColor.yellowColor()
                 self.searchText.backgroundColor = backgroundColor
             }
@@ -108,15 +99,16 @@ class SearchFormViewController: UIViewController {
     
     private func getTwitterAccountsFromStore(store: ACAccountStore) -> [ACAccount] {
         let twitterType = store.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)!
-        let accounts = store.accountsWithAccountType(twitterType).map { x in
-            x as! ACAccount
+        let accounts = store.accountsWithAccountType(twitterType)
+        if accounts.count == 0 {
+            return []
         }
-        return accounts
+        else {
+            return accounts.map { $0 as! ACAccount }
+        }
     }
     
     private func createTwitterAccountObservable() -> Observable<TwitterAccountState> {
-        
-//        let accessDeniedError = NSError(domain: TwitterInstantDomain, code: TwitterInstantError.AccessDenied.rawValue, userInfo: nil)
         
         let observable1: Observable<TwitterAccountState> = create { observer in
             self.accountStore.requestAccessToAccountsWithType(self.twitterAccountType, options: nil) { success, error in
@@ -149,9 +141,6 @@ class SearchFormViewController: UIViewController {
     private func twitterSearchAPICall(account: ACAccount, text: String) -> Observable<[String: AnyObject]> {
         
         print("create observable")
-        
-//        let noAccountsError = NSError(domain: TwitterInstantDomain, code: TwitterInstantError.NoTwitterAccounts.rawValue, userInfo: nil)
-//        let invalidResponseError = NSError(domain: TwitterInstantDomain, code: TwitterInstantError.InvalidResponse.rawValue, userInfo: nil)
         
         let request = self.requestforTwitterSearchWithText(text)
         request.account = account
@@ -209,6 +198,35 @@ class SearchFormViewController: UIViewController {
             }
             .observeOn(MainScheduler.sharedInstance)
         
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let parentView = UIApplication.sharedApplication().keyWindow!.rootViewController!.view
+        noAccountOverlay = UILabel(frame: parentView!.frame)
+        noAccountOverlay!.text = "Please log in into Twitter"
+        noAccountOverlay!.backgroundColor = UIColor(white: 1, alpha: 0.9)
+        noAccountOverlay?.textAlignment = .Center
+        parentView?.addSubview(noAccountOverlay!)
+        
+        requestAccess
+            .observeOn(MainScheduler.sharedInstance)
+            .subscribeNext { [unowned self] access in
+                print("subscribeNext \(access)")
+                switch access {
+                case .TwitterAccounts(let accounts):
+                    print(accounts)
+                    let hidden = accounts.count != 0
+                    print("\(self.noAccountOverlay)\(hidden)")
+                    self.noAccountOverlay?.hidden = hidden
+                case .AccessDenied:
+                    print("Access denied")
+                    self.noAccountOverlay?.hidden = false
+                    self.showAccessDeniedAlert()
+                }
+            }
+            .addDisposableTo(disposeBag)
     }
 
 }
