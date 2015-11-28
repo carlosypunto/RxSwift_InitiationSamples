@@ -166,11 +166,9 @@ class SearchFormViewController: UIViewController {
                 print(text)
                 return self.isValidSearchText(text)
             }
-            .distinctUntilChanged { (lhs: String, rhs: String) -> Bool in
-                return lhs == rhs
-            }
-            
             .throttle(0.5, $.mainScheduler)
+            .distinctUntilChanged()
+
         return distinctText
             .map { text in
                 return self.twitterSearchAPICall(account, text: text)
