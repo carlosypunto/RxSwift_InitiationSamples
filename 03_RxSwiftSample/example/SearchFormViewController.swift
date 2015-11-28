@@ -46,33 +46,32 @@ class SearchFormViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        requestAccess = self.createTwitterAccountObservable()
+        requestAccess = createTwitterAccountObservable()
             .shareReplay(1)
         
-        resultsViewController = splitViewController!.viewControllers[1] as! SearchResultsViewController
+        resultsViewController = splitViewController?.viewControllers[1] as! SearchResultsViewController
         twitterAccountType = accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
         
         requestAccess
-            .map({ (twitterAccountState) -> Observable<[Tweet]> in
+            .map { twitterAccountState -> Observable<[Tweet]> in
                 switch twitterAccountState {
                 case .TwitterAccounts(let accounts):
-                    if accounts.count > 0 {
-                        return self.searchResultsForAccount(accounts[0])
-                    }
-                    else {
-                        return just([])
-                    }
+                  guard !accounts.isEmpty else {
+                    return just([])
+                  }
+
+                  return self.searchResultsForAccount(accounts[0])
                 default:
                     return just([])
                 }
-            })
+            }
             .switchLatest()
             .subscribeNext { [unowned self] tweets in
                 self.resultsViewController.tweets = tweets
             }
             .addDisposableTo(disposeBag)
         
-        self.searchText.rx_text
+        searchText.rx_text
             // you can do map or just transform in subscribeNext
             .subscribeNext { [unowned self] text in
                 let backgroundColor = self.isValidSearchText(text) ? UIColor.whiteColor() : UIColor.yellowColor()
@@ -85,7 +84,7 @@ class SearchFormViewController: UIViewController {
         self.searchText.text = ""
         self.searchText.resignFirstResponder()
         self.searchText.enabled = false
-        let alert = UIAlertView(title: "Access Denied", message: "Please go to iPad settings app and activate twitter access for this app", delegate: nil, cancelButtonTitle: "OK")
+        let alert = UIAlertView(title: "Access Denied", message: "Please enable Twitter access for this app in iOS's Settings", delegate: nil, cancelButtonTitle: "OK")
         alert.show()
     }
     
@@ -100,22 +99,20 @@ class SearchFormViewController: UIViewController {
     private func getTwitterAccountsFromStore(store: ACAccountStore) -> [ACAccount] {
         let twitterType = store.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)!
         let accounts = store.accountsWithAccountType(twitterType)
-        if accounts.count == 0 {
+
+        guard !accounts.isEmpty else {
             return []
         }
-        else {
-            return accounts.map { $0 as! ACAccount }
-        }
+
+        return accounts.map { $0 as! ACAccount }
     }
     
     private func createTwitterAccountObservable() -> Observable<TwitterAccountState> {
-        
         let observable1: Observable<TwitterAccountState> = create { observer in
             self.accountStore.requestAccessToAccountsWithType(self.twitterAccountType, options: nil) { success, error in
                 if success {
                     observer.on(.Next(.TwitterAccounts(accounts: self.getTwitterAccountsFromStore(self.accountStore))))
-                }
-                else {
+                } else {
                     observer.on(.Next(.AccessDenied))
                 }
             }
@@ -139,10 +136,10 @@ class SearchFormViewController: UIViewController {
     }
     
     private func twitterSearchAPICall(account: ACAccount, text: String) -> Observable<[String: AnyObject]> {
-        
+
         print("create observable")
         
-        let request = self.requestforTwitterSearchWithText(text)
+        let request = requestforTwitterSearchWithText(text)
         request.account = account
         
         let urlSession = NSURLSession.sharedSession()
@@ -163,38 +160,31 @@ class SearchFormViewController: UIViewController {
     
     func searchResultsForAccount(account: ACAccount) -> Observable<[Tweet]> {
         
-        self.searchDisposeBag = DisposeBag()
+        searchDisposeBag = DisposeBag()
         
-        let distinctText: Observable<String> = self.searchText.rx_text
-            .filter { (text: String) -> Bool in
-                print(text)
-                return self.isValidSearchText(text)
-            }
-            .throttle(0.5, self.$.mainScheduler)
-            .distinctUntilChanged { (lhs: String, rhs: String) -> Bool in
-                return lhs == rhs
-            }
-            
+        let distinctText: Observable<String> = searchText.rx_text
+            .debug("Search text")
+            .filter { self.isValidSearchText($0) }
+            .throttle(0.5, $.mainScheduler)
+            .distinctUntilChanged()
+
         return distinctText
             .map { text in
                 return self.twitterSearchAPICall(account, text: text)
-                    .catchError { error in
-                        return just(Dictionary<String, AnyObject>())
-                    }
+                      .catchError { error in
+                        return just([String: AnyObject]())
+                      }
             }
             .switchLatest()
-            .observeOn(self.$.mainScheduler)
+            .observeOn($.mainScheduler)
             .map { dictionary in
-                if  let statuses = dictionary["statuses"] as? [[String: AnyObject]] {
-                    let tweets = statuses.map {
-                        return Tweet.tweetWithStatus($0)
-                    }
-                    
-                    return tweets
-                }
-                else {
+                guard let statuses = dictionary["statuses"] as? [[String: AnyObject]] else {
                     return []
                 }
+
+                let tweets = statuses.map { Tweet.tweetWithStatus($0) }
+                
+                return tweets
             }
             .observeOn(MainScheduler.sharedInstance)
         
@@ -205,7 +195,7 @@ class SearchFormViewController: UIViewController {
         
         let parentView = UIApplication.sharedApplication().keyWindow!.rootViewController!.view
         noAccountOverlay = UILabel(frame: parentView!.frame)
-        noAccountOverlay!.text = "Please log in into Twitter"
+        noAccountOverlay!.text = "Please login to Twitter"
         noAccountOverlay!.backgroundColor = UIColor(white: 1, alpha: 0.9)
         noAccountOverlay?.textAlignment = .Center
         parentView?.addSubview(noAccountOverlay!)
@@ -230,4 +220,3 @@ class SearchFormViewController: UIViewController {
     }
 
 }
-
