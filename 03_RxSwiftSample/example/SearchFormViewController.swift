@@ -162,7 +162,7 @@ class SearchFormViewController: UIViewController {
         searchDisposeBag = DisposeBag()
         
         let distinctText: Observable<String> = searchText.rx_text
-            .filter { (text: String) -> Bool in
+            .filter { text in
                 print(text)
                 return self.isValidSearchText(text)
             }
