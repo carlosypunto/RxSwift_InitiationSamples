@@ -85,8 +85,9 @@ class ViewController: UIViewController {
         signInButton.rx_tap.asObservable()
             .doOn(onNext: { [unowned self] in self.activityIndicator.startAnimating() })
             .flatMap {
-                self.checkLogin(username: self.usernameTextField.text!, password: self.passwordTextField.text!)
-                    .observeOn(self.backgroundWorkScheduler) 
+              DummyAsynchronousService()
+                .login(self.usernameTextField.text!, password: self.passwordTextField.text!)
+                .observeOn(self.backgroundWorkScheduler)
             }
             .observeOn(MainScheduler.sharedInstance) 
             .subscribeNext { [unowned self] valid in
@@ -104,63 +105,18 @@ class ViewController: UIViewController {
             }
             .addDisposableTo(disposeBag)
     }
-    // MARK: - Create a custom Observable
-    
-    func checkLogin(username username: String, password: String) -> Observable<Bool> {
-        
-        return create { observer in
-            let task = {
-                DummyAsynchronousService().singInWithUserName(username, password: password) { success in
-                    if success {
-                        observer.on(.Next(true))
-                    }
-                    else {
-                        observer.on(.Next(false))
-                    }
-                    observer.on(.Completed)
-                }
-            }
-            task()
-            return AnonymousDisposable {
-                
-            }
-        }
-        
-    }
-    
 }
 
 
 typealias ValidationObservable = Observable<(valid: Bool?, message: String?)>
 
 class DummyAsynchronousService {
-    
-    func singInWithUserName(userName: String, password: String, callback: Bool -> Void) {
-        
-        delay(2.0) {
-            let success = userName == "user" && password == "password"
-            callback(success)
-        }
-        
-    }
-    
+  // Dummy login method that checks the username and password and delays subscription
+  // by two seconds.
+  func login(userName: String, password: String) -> Observable<Bool> {
+    let success = userName == "user" && password == "password"
+
+    // Returns the value of success on a delayed timer of 2 seconds on the main thread
+    return just(success).delaySubscription(2, MainScheduler.sharedInstance)
+  }
 }
-
-
-// global function which run the closusure after of `delay` seconds
-// for the purpose of illustrating asynchronous execution
-func delay(delay:Double, closure:()->()) {
-    dispatch_after(
-        dispatch_time(
-            DISPATCH_TIME_NOW,
-            Int64(delay * Double(NSEC_PER_SEC))
-        ),
-        dispatch_get_main_queue(), closure)
-}
-
-
-
-
-
-
-
