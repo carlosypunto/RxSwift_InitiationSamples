@@ -99,7 +99,7 @@ class SearchFormViewController: UIViewController {
     private func getTwitterAccountsFromStore(store: ACAccountStore) -> [ACAccount] {
         let twitterType = store.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)!
         let accounts = store.accountsWithAccountType(twitterType)
-        if accounts.count == 0 {
+        if accounts.isEmpty {
             return []
         } else {
             return accounts.map { $0 as! ACAccount }
