@@ -205,7 +205,7 @@ class SearchFormViewController: UIViewController {
         
         let parentView = UIApplication.sharedApplication().keyWindow!.rootViewController!.view
         noAccountOverlay = UILabel(frame: parentView!.frame)
-        noAccountOverlay!.text = "Please log in into Twitter"
+        noAccountOverlay!.text = "Please login to Twitter"
         noAccountOverlay!.backgroundColor = UIColor(white: 1, alpha: 0.9)
         noAccountOverlay?.textAlignment = .Center
         parentView?.addSubview(noAccountOverlay!)
