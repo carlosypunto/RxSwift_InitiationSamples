@@ -32,14 +32,14 @@ class ViewController: UIViewController {
         /* map function transform a sequence of a type in another sequence of diferent type */
         let validUsernameSignal /* : Observable<Bool> */ = usernameTextField.rx_text
             // map Observable<String> to an Observable<Bool>
-            .map { text in
-                self.isValidUsername(text)
+            .map { username in
+                return username.characters.count > 3
             }
-        
+
         let validPasswordSignal /* : Observable<Bool> */ = passwordTextField.rx_text
             // map Observable<String> to an Observable<Bool>
-            .map { text in
-                self.isValidPassword(text)
+            .map { password in
+                return password.characters.count > 3
             }
         
         validUsernameSignal
@@ -104,17 +104,6 @@ class ViewController: UIViewController {
             }
             .addDisposableTo(disposeBag)
     }
-    
-    // MARK: - Validate string functions
-    
-    func isValidUsername(username: String) -> Bool {
-        return username.characters.count > 3
-    }
-    
-    func isValidPassword(password: String) -> Bool {
-        return password.characters.count > 3
-    }
-    
     // MARK: - Create a custom Observable
     
     func checkLogin(username username: String, password: String) -> Observable<Bool> {
