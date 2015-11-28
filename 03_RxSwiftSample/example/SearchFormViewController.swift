@@ -84,7 +84,7 @@ class SearchFormViewController: UIViewController {
         self.searchText.text = ""
         self.searchText.resignFirstResponder()
         self.searchText.enabled = false
-        let alert = UIAlertView(title: "Access Denied", message: "Please go to iPad settings app and activate twitter access for this app", delegate: nil, cancelButtonTitle: "OK")
+        let alert = UIAlertView(title: "Access Denied", message: "Please enable Twitter access for this app in iOS's Settings", delegate: nil, cancelButtonTitle: "OK")
         alert.show()
     }
     
