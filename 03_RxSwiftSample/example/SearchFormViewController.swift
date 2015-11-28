@@ -184,9 +184,7 @@ class SearchFormViewController: UIViewController {
                     return []
                 }
 
-                let tweets = statuses.map {
-                  return Tweet.tweetWithStatus($0)
-                }
+                let tweets = statuses.map { Tweet.tweetWithStatus($0) }
                 
                 return tweets
             }
