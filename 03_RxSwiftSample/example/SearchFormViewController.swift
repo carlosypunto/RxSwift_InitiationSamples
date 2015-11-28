@@ -49,7 +49,7 @@ class SearchFormViewController: UIViewController {
         requestAccess = createTwitterAccountObservable()
             .shareReplay(1)
         
-        resultsViewController = splitViewController!.viewControllers[1] as! SearchResultsViewController
+        resultsViewController = splitViewController?.viewControllers[1] as! SearchResultsViewController
         twitterAccountType = accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
         
         requestAccess
