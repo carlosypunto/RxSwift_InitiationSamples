@@ -84,12 +84,20 @@ class ViewController: UIViewController {
         
         signInButton.rx_tap.asObservable()
             .doOn(onNext: { [unowned self] in self.activityIndicator.startAnimating() })
+            // For every tap, we submit a request to our dummy async service 
+            // to check if credentials are valid on the background thread
             .flatMap {
               DummyAsynchronousService()
                 .login(self.usernameTextField.text!, password: self.passwordTextField.text!)
                 .observeOn(self.backgroundWorkScheduler)
             }
-            .observeOn(MainScheduler.sharedInstance) 
+            // We observe the result of the async service on the main thread
+            .observeOn(MainScheduler.sharedInstance)
+            // Upon a next event, we do the following:
+            // 1. Stop the activity indicator
+            // 2. Show sign in failure text if invalid
+            // 3. Enable the sign in button
+            // 4. If valid, perform segue and reset current controller.
             .subscribeNext { [unowned self] valid in
                 self.activityIndicator.stopAnimating()
                 self.signInFailureText.hidden = valid
