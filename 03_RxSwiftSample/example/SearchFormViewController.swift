@@ -56,11 +56,11 @@ class SearchFormViewController: UIViewController {
             .map { twitterAccountState -> Observable<[Tweet]> in
                 switch twitterAccountState {
                 case .TwitterAccounts(let accounts):
-                    if accounts.count > 0 {
-                        return self.searchResultsForAccount(accounts[0])
-                    } else {
-                        return just([])
-                    }
+                  guard !accounts.isEmpty else {
+                    return just([])
+                  }
+
+                  return self.searchResultsForAccount(accounts[0])
                 default:
                     return just([])
                 }
@@ -99,11 +99,12 @@ class SearchFormViewController: UIViewController {
     private func getTwitterAccountsFromStore(store: ACAccountStore) -> [ACAccount] {
         let twitterType = store.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)!
         let accounts = store.accountsWithAccountType(twitterType)
-        if accounts.isEmpty {
+
+        guard !accounts.isEmpty else {
             return []
-        } else {
-            return accounts.map { $0 as! ACAccount }
         }
+
+        return accounts.map { $0 as! ACAccount }
     }
     
     private func createTwitterAccountObservable() -> Observable<TwitterAccountState> {
@@ -179,15 +180,15 @@ class SearchFormViewController: UIViewController {
             .switchLatest()
             .observeOn($.mainScheduler)
             .map { dictionary in
-                if let statuses = dictionary["statuses"] as? [[String: AnyObject]] {
-                    let tweets = statuses.map {
-                        return Tweet.tweetWithStatus($0)
-                    }
-                    
-                    return tweets
-                } else {
+                guard let statuses = dictionary["statuses"] as? [[String: AnyObject]] else {
                     return []
                 }
+
+                let tweets = statuses.map {
+                  return Tweet.tweetWithStatus($0)
+                }
+                
+                return tweets
             }
             .observeOn(MainScheduler.sharedInstance)
         
