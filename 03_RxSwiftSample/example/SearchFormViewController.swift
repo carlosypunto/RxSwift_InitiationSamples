@@ -53,19 +53,18 @@ class SearchFormViewController: UIViewController {
         twitterAccountType = accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
         
         requestAccess
-            .map({ (twitterAccountState) -> Observable<[Tweet]> in
+            .map { twitterAccountState -> Observable<[Tweet]> in
                 switch twitterAccountState {
                 case .TwitterAccounts(let accounts):
                     if accounts.count > 0 {
                         return self.searchResultsForAccount(accounts[0])
-                    }
-                    else {
+                    } else {
                         return just([])
                     }
                 default:
                     return just([])
                 }
-            })
+            }
             .switchLatest()
             .subscribeNext { [unowned self] tweets in
                 self.resultsViewController.tweets = tweets
@@ -102,20 +101,17 @@ class SearchFormViewController: UIViewController {
         let accounts = store.accountsWithAccountType(twitterType)
         if accounts.count == 0 {
             return []
-        }
-        else {
+        } else {
             return accounts.map { $0 as! ACAccount }
         }
     }
     
     private func createTwitterAccountObservable() -> Observable<TwitterAccountState> {
-        
         let observable1: Observable<TwitterAccountState> = create { observer in
             self.accountStore.requestAccessToAccountsWithType(self.twitterAccountType, options: nil) { success, error in
                 if success {
                     observer.on(.Next(.TwitterAccounts(accounts: self.getTwitterAccountsFromStore(self.accountStore))))
-                }
-                else {
+                } else {
                     observer.on(.Next(.AccessDenied))
                 }
             }
@@ -178,21 +174,20 @@ class SearchFormViewController: UIViewController {
         return distinctText
             .map { text in
                 return self.twitterSearchAPICall(account, text: text)
-                    .catchError { error in
-                        return just(Dictionary<String, AnyObject>())
-                    }
+                      .catchError { error in
+                        return just([String: AnyObject]())
+                      }
             }
             .switchLatest()
             .observeOn($.mainScheduler)
             .map { dictionary in
-                if  let statuses = dictionary["statuses"] as? [[String: AnyObject]] {
+                if let statuses = dictionary["statuses"] as? [[String: AnyObject]] {
                     let tweets = statuses.map {
                         return Tweet.tweetWithStatus($0)
                     }
                     
                     return tweets
-                }
-                else {
+                } else {
                     return []
                 }
             }
@@ -230,4 +225,3 @@ class SearchFormViewController: UIViewController {
     }
 
 }
-
