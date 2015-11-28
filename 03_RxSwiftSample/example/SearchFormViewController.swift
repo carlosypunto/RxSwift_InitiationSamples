@@ -46,7 +46,7 @@ class SearchFormViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        requestAccess = self.createTwitterAccountObservable()
+        requestAccess = createTwitterAccountObservable()
             .shareReplay(1)
         
         resultsViewController = splitViewController!.viewControllers[1] as! SearchResultsViewController
@@ -72,7 +72,7 @@ class SearchFormViewController: UIViewController {
             }
             .addDisposableTo(disposeBag)
         
-        self.searchText.rx_text
+        searchText.rx_text
             // you can do map or just transform in subscribeNext
             .subscribeNext { [unowned self] text in
                 let backgroundColor = self.isValidSearchText(text) ? UIColor.whiteColor() : UIColor.yellowColor()
@@ -139,10 +139,10 @@ class SearchFormViewController: UIViewController {
     }
     
     private func twitterSearchAPICall(account: ACAccount, text: String) -> Observable<[String: AnyObject]> {
-        
+
         print("create observable")
         
-        let request = self.requestforTwitterSearchWithText(text)
+        let request = requestforTwitterSearchWithText(text)
         request.account = account
         
         let urlSession = NSURLSession.sharedSession()
@@ -163,18 +163,18 @@ class SearchFormViewController: UIViewController {
     
     func searchResultsForAccount(account: ACAccount) -> Observable<[Tweet]> {
         
-        self.searchDisposeBag = DisposeBag()
+        searchDisposeBag = DisposeBag()
         
-        let distinctText: Observable<String> = self.searchText.rx_text
+        let distinctText: Observable<String> = searchText.rx_text
             .filter { (text: String) -> Bool in
                 print(text)
                 return self.isValidSearchText(text)
             }
-            .throttle(0.5, self.$.mainScheduler)
             .distinctUntilChanged { (lhs: String, rhs: String) -> Bool in
                 return lhs == rhs
             }
             
+            .throttle(0.5, $.mainScheduler)
         return distinctText
             .map { text in
                 return self.twitterSearchAPICall(account, text: text)
@@ -183,7 +183,7 @@ class SearchFormViewController: UIViewController {
                     }
             }
             .switchLatest()
-            .observeOn(self.$.mainScheduler)
+            .observeOn($.mainScheduler)
             .map { dictionary in
                 if  let statuses = dictionary["statuses"] as? [[String: AnyObject]] {
                     let tweets = statuses.map {
