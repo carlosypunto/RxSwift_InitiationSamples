@@ -163,10 +163,8 @@ class SearchFormViewController: UIViewController {
         searchDisposeBag = DisposeBag()
         
         let distinctText: Observable<String> = searchText.rx_text
-            .filter { text in
-                print(text)
-                return self.isValidSearchText(text)
-            }
+            .debug("Search text")
+            .filter { self.isValidSearchText($0) }
             .throttle(0.5, $.mainScheduler)
             .distinctUntilChanged()
 
