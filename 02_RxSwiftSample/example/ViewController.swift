@@ -28,8 +28,7 @@ class ViewController: UIViewController {
         operationQueue.maxConcurrentOperationCount = 2
         operationQueue.qualityOfService = NSQualityOfService.UserInitiated
         backgroundWorkScheduler = OperationQueueScheduler(operationQueue: operationQueue)
-        
-        
+
         /* map function transform a sequence of a type in another sequence of diferent type */
         let validUsernameSignal /* : Observable<Bool> */ = usernameTextField.rx_text
             // map Observable<String> to an Observable<Bool>
