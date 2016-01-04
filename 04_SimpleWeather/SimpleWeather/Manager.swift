@@ -43,7 +43,7 @@ class Manager: NSObject, CLLocationManagerDelegate {
                 let updateDailyForecast = client.fetchDailyForecastForLocation(location)
                 let updateHourlyForecast = client.fetchHourlyForecastForLocation(location)
                 
-                return zip(updateCurrentConditions, updateDailyForecast, updateHourlyForecast) { conditions, daily, hourly in
+                return Observable.zip(updateCurrentConditions, updateDailyForecast, updateHourlyForecast) { conditions, daily, hourly in
                     return (conditions, daily, hourly)
                     }
                     .observeOn(backgroundWorkScheduler)

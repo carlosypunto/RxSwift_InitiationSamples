@@ -22,7 +22,7 @@ public class Dependencies {
 		operationQueue.qualityOfService = NSQualityOfService.UserInitiated
 		backgroundWorkScheduler = OperationQueueScheduler(operationQueue: operationQueue)
 		
-		mainScheduler = MainScheduler.sharedInstance
+		mainScheduler = MainScheduler.instance
     }
 	
 }

@@ -57,12 +57,12 @@ class SearchFormViewController: UIViewController {
                 switch twitterAccountState {
                 case .TwitterAccounts(let accounts):
                   guard !accounts.isEmpty else {
-                    return just([])
+                    return Observable.just([])
                   }
 
                   return self.searchResultsForAccount(accounts[0])
                 default:
-                    return just([])
+                    return Observable.just([])
                 }
             }
             .switchLatest()
@@ -108,7 +108,7 @@ class SearchFormViewController: UIViewController {
     }
     
     private func createTwitterAccountObservable() -> Observable<TwitterAccountState> {
-        let observable1: Observable<TwitterAccountState> = create { observer in
+        let observable1: Observable<TwitterAccountState> = Observable.create { observer in
             self.accountStore.requestAccessToAccountsWithType(self.twitterAccountType, options: nil) { success, error in
                 if success {
                     observer.on(.Next(.TwitterAccounts(accounts: self.getTwitterAccountsFromStore(self.accountStore))))
@@ -126,7 +126,7 @@ class SearchFormViewController: UIViewController {
                 return .TwitterAccounts(accounts: accounts)
         }
         
-        return sequenceOf(observable1, observable2).merge()
+        return Observable.of(observable1, observable2).merge()
     }
     
     private func requestforTwitterSearchWithText(text: String) -> SLRequest {
@@ -165,19 +165,19 @@ class SearchFormViewController: UIViewController {
         let distinctText: Observable<String> = searchText.rx_text
             .debug("Search text")
             .filter { self.isValidSearchText($0) }
-            .throttle(0.5, $.mainScheduler)
+            .throttle(0.5, scheduler: $.mainScheduler)
             .distinctUntilChanged()
 
         return distinctText
             .map { text in
                 return self.twitterSearchAPICall(account, text: text)
                       .catchError { error in
-                        return just([String: AnyObject]())
+                        return Observable.just([String: AnyObject]())
                       }
             }
             .switchLatest()
             .observeOn($.mainScheduler)
-            .map { dictionary in
+            .map { dictionary -> [Tweet] in
                 guard let statuses = dictionary["statuses"] as? [[String: AnyObject]] else {
                     return []
                 }
@@ -186,7 +186,7 @@ class SearchFormViewController: UIViewController {
                 
                 return tweets
             }
-            .observeOn(MainScheduler.sharedInstance)
+            .observeOn(MainScheduler.instance)
         
     }
     
@@ -201,7 +201,7 @@ class SearchFormViewController: UIViewController {
         parentView?.addSubview(noAccountOverlay!)
         
         requestAccess
-            .observeOn(MainScheduler.sharedInstance)
+            .observeOn(MainScheduler.instance)
             .subscribeNext { [unowned self] access in
                 print("subscribeNext \(access)")
                 switch access {

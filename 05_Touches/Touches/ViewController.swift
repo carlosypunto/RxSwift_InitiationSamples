@@ -49,7 +49,7 @@ class ViewController: UIViewController {
         beganLocations
             .map { startLocation in
 
-                return zip(movedLocations .startWith(startLocation), movedLocations) { (previous, next) in
+                return Observable.zip(movedLocations.startWith(startLocation), movedLocations) { (previous, next) in
                     return (next.x - previous.x, next.y - previous.y)
                     } .takeUntil(endedLocations)
             }

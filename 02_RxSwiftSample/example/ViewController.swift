@@ -63,7 +63,7 @@ class ViewController: UIViewController {
             .addDisposableTo(disposeBag)
         
         // you can combine multiples observable
-        let signUpActiveSignal /*: Observable<Bool> */ = combineLatest(validUsernameSignal, validPasswordSignal) { isValidUserName, isValidPassword in
+        let signUpActiveSignal /*: Observable<Bool> */ = Observable.combineLatest(validUsernameSignal, validPasswordSignal) { isValidUserName, isValidPassword in
             return isValidUserName && isValidPassword
         }
         
@@ -92,7 +92,7 @@ class ViewController: UIViewController {
                 .observeOn(self.backgroundWorkScheduler)
             }
             // We observe the result of the async service on the main thread
-            .observeOn(MainScheduler.sharedInstance)
+            .observeOn(MainScheduler.instance)
             // Upon a next event, we do the following:
             // 1. Stop the activity indicator
             // 2. Show sign in failure text if invalid
@@ -125,6 +125,6 @@ class DummyAsynchronousService {
     let success = userName == "user" && password == "password"
 
     // Returns the value of success on a delayed timer of 2 seconds on the main thread
-    return just(success).delaySubscription(2, MainScheduler.sharedInstance)
+    return Observable.just(success).delaySubscription(2, scheduler: MainScheduler.instance)
   }
 }
